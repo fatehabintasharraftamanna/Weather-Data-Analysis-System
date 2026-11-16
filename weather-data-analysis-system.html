@@ -361,9 +361,104 @@ footer{text-align:center; color:var(--text-faint); font-size:11.5px; margin-top:
 }
 .city-card .cc-remove:hover{ background:rgba(0,0,0,.55); }.wx-metric-card .wx-value{font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700;}
 .wx-metric-card .wx-sub{font-size:12px; color:var(--text-dim); margin-top:6px; line-height:1.5;}
+
+/* ================= LOGIN SCREEN (animated) ================= */
+.login-overlay{
+  position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px;
+  background:linear-gradient(135deg,#0a1230,#13315c,#0f4c75,#1b2a6b,#0a1230);
+  background-size:400% 400%; animation:lgSky 18s ease infinite;
+  overflow:hidden; transition:opacity .6s ease, transform .6s ease, visibility .6s;
+}
+.login-overlay.leaving{opacity:0; transform:scale(1.06); pointer-events:none;}
+.login-overlay.hidden{display:none;}
+@keyframes lgSky{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.lg-sun{position:absolute; top:-120px; right:-80px; width:360px; height:360px; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,210,110,.55),rgba(255,170,60,.18) 55%,transparent 70%); animation:lgSun 7s ease-in-out infinite;}
+@keyframes lgSun{0%,100%{transform:scale(1); opacity:.8}50%{transform:scale(1.15); opacity:1}}
+.lg-star{position:absolute; width:2px; height:2px; border-radius:50%; background:#fff; animation:lgTwinkle 3s ease-in-out infinite;}
+@keyframes lgTwinkle{0%,100%{opacity:.1}50%{opacity:.95}}
+.lg-cloud{position:absolute; left:-260px; width:220px; height:64px; border-radius:60px; background:rgba(255,255,255,.12); filter:blur(2px); animation:lgCloud linear infinite;}
+.lg-cloud::before,.lg-cloud::after{content:''; position:absolute; background:inherit; border-radius:50%;}
+.lg-cloud::before{width:90px; height:90px; top:-40px; left:30px;}
+.lg-cloud::after{width:70px; height:70px; top:-28px; left:105px;}
+@keyframes lgCloud{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 560px))}}
+.lg-drop{position:absolute; top:-30px; width:1.5px; height:16px; background:linear-gradient(transparent,rgba(160,210,255,.7)); animation:lgRain linear infinite;}
+@keyframes lgRain{from{transform:translateY(0)}to{transform:translateY(115vh)}}
+.lg-card{
+  position:relative; z-index:2; width:100%; max-width:410px; padding:30px 28px 26px; border-radius:20px;
+  background:rgba(14,26,43,.62); border:1px solid rgba(160,190,220,.28);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 20px 60px rgba(0,0,0,.45); animation:lgCardIn .8s cubic-bezier(.2,.9,.3,1) both;
+}
+@keyframes lgCardIn{from{opacity:0; transform:translateY(40px) scale(.96)}to{opacity:1; transform:none}}
+.lg-card.shake{animation:lgShake .45s ease;}
+@keyframes lgShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+.lg-logo{display:flex; justify-content:center; margin-bottom:12px;}
+.lg-logo .dial{width:64px; height:64px;}
+.lg-card h2{margin:0; text-align:center; font-family:'Archivo',sans-serif; font-weight:800; font-size:22px;}
+.lg-card .lg-sub{text-align:center; font-size:12.5px; color:var(--text-dim); margin:6px 0 20px;}
+.lg-roles{position:relative; display:grid; grid-template-columns:1fr 1fr; padding:4px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid var(--line-strong); margin-bottom:18px;}
+.lg-roles .lg-slider{position:absolute; top:4px; bottom:4px; left:4px; width:calc(50% - 4px); border-radius:9px; background:var(--sky); transition:transform .35s cubic-bezier(.3,1.2,.4,1);}
+.lg-roles[data-role="admin"] .lg-slider{transform:translateX(100%);}
+.lg-role{position:relative; z-index:1; background:transparent; border:none; cursor:pointer; padding:10px 6px; font-family:'Inter',sans-serif; font-weight:600; font-size:13.5px; color:var(--text-dim); transition:color .25s;}
+.lg-role.active{color:var(--ink);}
+.lg-fields{display:block;}
+.lg-field{animation:fade .35s ease; margin-bottom:12px;}
+.lg-field[hidden]{display:none;}
+.lg-err{font-size:12.5px; color:var(--danger); min-height:18px; margin:2px 0 10px;}
+.lg-btn{width:100%;}
+.lg-hint{margin-top:14px; font-size:11.5px; color:var(--text-faint); text-align:center; line-height:1.5;}
+.role-chip{display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:12px; padding:7px 11px; border-radius:100px; border:1px solid var(--line-strong); color:var(--text-dim);}
+.role-chip.admin{border-color:var(--amber); color:var(--amber);}
+@media (prefers-reduced-motion: reduce){ .login-overlay,.lg-sun,.lg-star,.lg-cloud,.lg-drop,.lg-card{animation:none !important;} }
+
+/* ================= COMPARE DIVISIONS ================= */
+.div-chip{display:inline-flex; align-items:center; gap:7px; cursor:pointer; user-select:none; font-family:'JetBrains Mono',monospace; font-size:12px; padding:7px 12px; border-radius:100px; border:1px solid var(--line-strong); color:var(--text-faint); background:transparent; transition:all .2s;}
+.div-chip .dot{width:9px; height:9px; border-radius:50%; background:var(--c); opacity:.35; transition:opacity .2s, box-shadow .2s;}
+.div-chip.on{color:var(--text); border-color:var(--c); background:rgba(255,255,255,.04);}
+.div-chip.on .dot{opacity:1; box-shadow:0 0 8px var(--c);}
+.div-chip:hover{transform:translateY(-1px);}
+.div-anim{animation:divIn .5s ease both;}
+@keyframes divIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+
+/* ================= ADMIN-ONLY / ACTIVITY ================= */
+.admin-only{display:none;}
+body.is-admin th.admin-only, body.is-admin td.admin-only{display:table-cell;}
+.act-badge{display:inline-block; font-size:11px; padding:2px 8px; border-radius:100px; border:1px solid var(--line-strong); color:var(--text-dim); font-family:'JetBrains Mono',monospace;}
+.act-badge.admin{border-color:var(--amber); color:var(--amber);}
+.act-filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.act-filters select{width:auto; min-width:150px; padding:7px 10px; font-size:12.5px;}
 </style>
 </head>
 <body>
+
+<div class="login-overlay" id="loginOverlay" aria-modal="true" role="dialog" aria-label="Login">
+  <div class="lg-sun"></div>
+  <div id="lgScene"></div>
+  <div class="lg-card" id="lgCard">
+    <div class="lg-logo"><div class="dial"></div></div>
+    <h2>Weather Data Analysis System</h2>
+    <div class="lg-sub">Sign in to continue</div>
+    <div class="lg-roles" id="lgRoles" data-role="user">
+      <div class="lg-slider"></div>
+      <button type="button" class="lg-role active" data-role="user">👤 User</button>
+      <button type="button" class="lg-role" data-role="admin">🛡️ Admin</button>
+    </div>
+    <form id="loginForm" autocomplete="off">
+      <div class="lg-field" id="lgUserField">
+        <label for="lgName">Your name (optional)</label>
+        <input type="text" id="lgName" placeholder="e.g. Rahim" maxlength="30">
+      </div>
+      <div class="lg-field" id="lgPassField" hidden>
+        <label for="lgPass">Admin password</label>
+        <input type="password" id="lgPass" placeholder="Enter admin password">
+      </div>
+      <div class="lg-err" id="lgErr"></div>
+      <button type="submit" class="btn btn-primary lg-btn" id="lgSubmit">Continue as User →</button>
+    </form>
+    <div class="lg-hint" id="lgHint">Users can view the dashboard, live weather, alerts and compare cities &amp; divisions. Admins also get Add Reading, Data Log, Analysis, Admin, Activity and Tests.</div>
+  </div>
+</div>
 <div class="bg-grid"></div>
 <div class="app">
 
@@ -376,7 +471,9 @@ footer{text-align:center; color:var(--text-faint); font-size:11.5px; margin-top:
       </div>
     </div>
     <div style="display:flex; align-items:center; gap:10px;">
+      <span class="role-chip" id="roleChip" style="display:none;"></span>
       <button class="btn btn-ghost btn-sm" id="unitToggle" title="Toggle between Celsius and Fahrenheit">°C</button>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn" style="display:none;" title="Log out">⎋ Logout</button>
       <div class="status-chip"><span class="status-dot" id="statusDot"></span><span id="statusText">Loading station log…</span></div>
     </div>
   </div>
@@ -385,12 +482,15 @@ footer{text-align:center; color:var(--text-faint); font-size:11.5px; margin-top:
     <button class="tab active" data-view="dashboard">Dashboard</button>
     <button class="tab" data-view="live">Live Weather</button>
     <button class="tab" data-view="compare">Compare Cities</button>
+    <button class="tab" data-view="divisions">Compare Divisions</button>
     <button class="tab" data-view="add">Add Reading</button>
     <button class="tab" data-view="log">Data Log</button>
     <button class="tab" data-view="analysis">Analysis</button>
     <button class="tab" data-view="alerts">Alerts <span id="alertTabCount"></span></button>
     <button class="tab" data-view="extreme">Extreme Readings <span id="extremeTabCount"></span></button>
     <button class="tab" data-view="settings">Admin</button>
+    <button class="tab" data-view="tests" id="testsTab" style="display:none;">🧪 Tests</button>
+    <button class="tab" data-view="activity" id="activityTab" style="display:none;">📋 Activity</button>
   </div>
 
   <div class="station-bar">
@@ -521,7 +621,7 @@ footer{text-align:center; color:var(--text-faint); font-size:11.5px; margin-top:
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Date</th><th>Station</th><th id="logTempHeader">Temp °C</th><th>Rainfall mm</th><th>Humidity %</th><th>Wind km/h</th><th></th></tr></thead>
+        <thead><tr><th>Date</th><th>Station</th><th id="logTempHeader">Temp °C</th><th>Rainfall mm</th><th>Humidity %</th><th>Wind km/h</th><th class="admin-only">Added by</th><th></th></tr></thead>
         <tbody id="logBody"></tbody>
       </table>
     </div>
@@ -594,6 +694,80 @@ footer{text-align:center; color:var(--text-faint); font-size:11.5px; margin-top:
   </div>
 
   <!-- SETTINGS / ADMIN -->
+  <!-- COMPARE DIVISIONS -->
+  <div class="view" id="view-divisions">
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>
+          <h3>Compare Divisions · Bangladesh · 7-Day Forecast</h3>
+          <p class="metric-sub" style="margin-bottom:0;">All 8 divisions side by side. Tap a division to show or hide it.</p>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <select id="divMetric" style="width:auto; min-width:150px; padding:7px 10px; font-size:12.5px;">
+            <option value="max">Chart: High temperature</option>
+            <option value="min">Chart: Low temperature</option>
+            <option value="rain">Chart: Rainfall</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" id="divRefresh">↻ Refresh</button>
+        </div>
+      </div>
+      <div id="divChips" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;"></div>
+      <div class="msg" id="divMsg"></div>
+    </div>
+    <div id="divBody"><div class="empty-state" style="padding:60px 0;">Open this tab to load the divisions…</div></div>
+  </div>
+
+  <!-- ACTIVITY (admin only) -->
+  <div class="view" id="view-activity">
+    <div class="grid cols-4" id="actCards" style="margin-bottom:16px;"></div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <h3>Users</h3>
+      <p class="metric-sub" style="margin-bottom:12px;">Everyone who has logged in, and the readings they added. Admin can remove all readings added by a user. Activity is recorded in this browser only.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>User</th><th>Role</th><th>Logins</th><th>Readings added</th><th>Readings on file now</th><th>Last active</th><th></th></tr></thead>
+        <tbody id="actUsers"></tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+        <h3 style="margin:0;">Activity Log <span class="pill" id="actCount"></span></h3>
+        <div class="act-filters">
+          <select id="actFilterAction">
+            <option value="">All actions</option>
+            <option value="login">Logins</option>
+            <option value="login_failed">Failed admin logins</option>
+            <option value="logout">Logouts</option>
+            <option value="add_reading">Readings added</option>
+            <option value="delete_reading">Readings deleted</option>
+            <option value="delete_all">Delete all data</option>
+            <option value="import_data">Data imports</option>
+            <option value="admin_delete_user_data">Admin removed user data</option>
+            <option value="log_cleared">Log cleared</option>
+          </select>
+          <select id="actFilterUser"><option value="">All users</option></select>
+          <button class="btn btn-ghost btn-sm" id="actExport">⬇️ Export CSV</button>
+          <button class="btn btn-danger btn-sm" id="actClear">Clear log</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Details</th></tr></thead>
+        <tbody id="actBody"></tbody>
+      </table></div>
+      <div class="msg" id="actMsg"></div>
+    </div>
+  </div>
+
+  <div class="view" id="view-tests">
+    <div class="card">
+      <h3>Test Runner</h3>
+      <p class="metric-sub" style="margin-bottom:12px;">Unit tests for every feature: statistics, unit conversion, trend, regression, wind direction, alerts, login &amp; roles, activity log, reading ownership, Compare Cities, Compare Divisions, weather helpers, saved cities, station lists and alert labels. Each group shows a Test Case table and its Output. The last test in each group has an intentionally wrong expected value, so you can see how a failure is reported.</p>
+      <div class="actions-row"><button class="btn" id="runTestsBtn">▶ Run All Tests</button><span class="pill" id="testSummary">Not run yet</span></div>
+      <div id="testOutput" style="margin-top:18px;"></div>
+    </div>
+  </div>
+
   <div class="view" id="view-settings">
     <div class="card settings-block">
       <h4>Alert Delivery</h4>
@@ -1093,7 +1267,7 @@ function renderLog(){
   document.getElementById('logCount').textContent = rows.length + ' record' + (rows.length===1?'':'s');
   const body = document.getElementById('logBody');
   if(!rows.length){
-    body.innerHTML = `<tr><td colspan="7"><div class="empty-state">No readings match. Add data from the Input Module.</div></td></tr>`;
+    body.innerHTML = `<tr><td colspan="8"><div class="empty-state">No readings match. Add data from the Input Module.</div></td></tr>`;
     return;
   }
   body.innerHTML = rows.map(r=>`
@@ -1104,10 +1278,14 @@ function renderLog(){
       <td>${fmt(r.rain)}</td>
       <td>${fmt(r.hum,0)}</td>
       <td>${fmt(r.wind)}</td>
+      <td class="admin-only">${escHtml(r.addedBy||'—')}</td>
       <td><button class="btn btn-danger btn-sm" onclick="deleteReading('${r.id}')">Delete</button></td>
     </tr>`).join('');
 }
 window.deleteReading = async function(id){
+  if(!roleCapabilities(authRole).dataLog) return; // Admin only
+  const gone = readings.find(r=> r.id === id);
+  if(gone) logActivity('delete_reading', `${gone.station||'station'} · ${gone.date}` + (gone.addedBy ? ` (added by ${gone.addedBy})` : ''));
   readings = readings.filter(r=> r.id !== id);
   await saveReadings();
   renderAll();
@@ -1365,6 +1543,7 @@ document.getElementById('unitToggle').addEventListener('click', ()=>{
   renderAll();
   if(liveLoc && lastLiveFetchRaw) renderLiveWeather(lastLiveFetchRaw.f, lastLiveFetchRaw.a);
   if(lastCompareResults) renderCompareResults(lastCompareResults);
+  if(lastDivResults) renderDivisionResults(false);
 });
 
 // ---------- tabs ----------
@@ -1380,6 +1559,7 @@ document.getElementById('tabs').addEventListener('click', e=>{
 // ---------- add form ----------
 document.getElementById('readingForm').addEventListener('submit', async e=>{
   e.preventDefault();
+  if(!roleCapabilities(authRole).addReading) return; // Admin only
   const msg = document.getElementById('formMsg');
   const date = document.getElementById('f-date').value;
   const tempInput = parseFloat(document.getElementById('f-temp').value);
@@ -1400,7 +1580,8 @@ document.getElementById('readingForm').addEventListener('submit', async e=>{
   }
 
   readings = readings.filter(r=> !(r.date===date && r.station===station)); // replace same-day+station entry
-  readings.push({ id: date+'-'+station+'-'+Math.random().toString(36).slice(2,7), date, temp, rain, hum, wind, station });
+  readings.push({ id: date+'-'+station+'-'+Math.random().toString(36).slice(2,7), date, temp, rain, hum, wind, station, addedBy: currentUserName(), addedRole: authRole || 'unknown' });
+  logActivity('add_reading', `${station} · ${date} · ${fmt(temp)}°C · ${fmt(rain)}mm rain · ${fmt(hum,0)}% hum · ${fmt(wind)}km/h`);
   readings.sort((a,b)=> a.date.localeCompare(b.date));
   await saveReadings();
 
@@ -1502,6 +1683,7 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
 });
 document.getElementById('importBtn').addEventListener('click', ()=> document.getElementById('importFile').click());
 document.getElementById('importFile').addEventListener('change', async e=>{
+  if(!roleCapabilities(authRole).settings) return; // Admin only
   const file = e.target.files[0];
   if(!file) return;
   const msg = document.getElementById('settingsMsg');
@@ -1510,6 +1692,7 @@ document.getElementById('importFile').addEventListener('change', async e=>{
     const parsed = JSON.parse(text);
     if(Array.isArray(parsed.readings)){
       readings = parsed.readings;
+      logActivity('import_data', `${readings.length} readings restored from backup`);
       if(parsed.thresholds) thresholds = parsed.thresholds;
       await saveReadings(); await saveThresholds();
       syncThresholdUI(); renderAll();
@@ -1521,7 +1704,9 @@ document.getElementById('importFile').addEventListener('change', async e=>{
   e.target.value = '';
 });
 document.getElementById('clearAllBtn').addEventListener('click', async ()=>{
+  if(!roleCapabilities(authRole).settings) return; // Admin only
   if(!confirm('Delete all stored readings? This cannot be undone.')) return;
+  logActivity('delete_all', `${readings.length} readings removed`);
   readings = [];
   await saveReadings();
   renderAll();
@@ -2121,14 +2306,18 @@ window.removeCompareCity = function(i){
   renderCompareChips();
   fetchCompareData();
 };
+function canAddCompareCity(list, label, max){
+  const limit = max || 5;
+  if(list.length >= limit) return { ok:false, reason:'max' };
+  if(list.some(c=> c.label === label)) return { ok:false, reason:'duplicate' };
+  return { ok:true };
+}
 function addCompareCity(lat, lon, label){
   const msg = document.getElementById('compareMsg');
-  if(compareCities.length >= 5){
-    msg.className = 'msg err'; msg.textContent = 'You can compare up to 5 cities at a time — remove one first.';
-    return;
-  }
-  if(compareCities.some(c=> c.label===label)){
-    msg.className = 'msg err'; msg.textContent = 'That city is already added.';
+  const check = canAddCompareCity(compareCities, label);
+  if(!check.ok){
+    msg.className = 'msg err';
+    msg.textContent = check.reason === 'max' ? 'You can compare up to 5 cities at a time — remove one first.' : 'That city is already added.';
     return;
   }
   compareCities.push({lat, lon, label});
@@ -2278,6 +2467,677 @@ document.getElementById('testAlarmBtn').addEventListener('click', ()=>{
 });
 
 // ---------- init ----------
+// ================= ACTIVITY LOG (admin-only view; recorded in this browser) =================
+const ACTIVITY_KEY = 'weather-activity-log';
+const ACTIVITY_MAX = 500;
+let activityLog = [];
+let actFilter = { action:'', user:'' };
+const ACTIVITY_LABELS = {
+  login:'🔓 Logged in', login_failed:'⚠️ Failed admin login', logout:'🔒 Logged out', add_reading:'➕ Added reading',
+  delete_reading:'🗑️ Deleted reading', delete_all:'💥 Deleted all data', import_data:'📥 Imported data',
+  admin_delete_user_data:'🛠️ Removed user data', log_cleared:'🧹 Cleared log'
+};
+function escHtml(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// pure helpers (unit tested)
+function makeActivityEntry(user, role, action, detail, ts){
+  return { id: Math.random().toString(36).slice(2,10), ts: ts || new Date().toISOString(), user, role, action, detail: detail || '' };
+}
+function appendActivity(list, entry, max){ return [...list, entry].slice(-(max || ACTIVITY_MAX)); }
+function summarizeActivity(list){
+  const users = new Map();
+  let logins = 0, failed = 0, added = 0;
+  list.forEach(e=>{
+    if(e.action === 'login_failed'){ failed++; return; }
+    const key = e.role + '|' + e.user;
+    if(!users.has(key)) users.set(key, { user:e.user, role:e.role, logins:0, added:0, last:e.ts });
+    const u = users.get(key);
+    if(e.action === 'login'){ logins++; u.logins++; }
+    if(e.action === 'add_reading'){ added++; u.added++; }
+    if(e.ts > u.last) u.last = e.ts;
+  });
+  return { logins, failed, added, users:[...users.values()].sort((a,b)=> b.last.localeCompare(a.last)) };
+}
+function filterActivity(list, f){
+  return list.filter(e=> (!f.action || e.action === f.action) && (!f.user || e.user === f.user));
+}
+function countReadingsBy(list, user, role){ return list.filter(r=> r.addedBy === user && (!role || r.addedRole === role)).length; }
+function removeReadingsBy(list, user, role){ return list.filter(r=> !(r.addedBy === user && (!role || r.addedRole === role))); }
+
+function loadActivity(){ try{ const raw = localStorage.getItem(ACTIVITY_KEY); activityLog = raw ? JSON.parse(raw) : []; if(!Array.isArray(activityLog)) activityLog = []; }catch(e){ activityLog = []; } }
+function saveActivity(){ try{ localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activityLog)); }catch(e){} }
+function logActivity(action, detail, who){
+  const user = who ? who.user : currentUserName();
+  const role = who ? who.role : (authRole || 'unknown');
+  activityLog = appendActivity(activityLog, makeActivityEntry(user, role, action, detail));
+  saveActivity();
+  const v = document.getElementById('view-activity');
+  if(authRole === 'admin' && v && v.classList.contains('active')) renderActivity();
+}
+
+function renderActivity(){
+  if(authRole !== 'admin') return; // admin only
+  const sum = summarizeActivity(activityLog);
+  document.getElementById('actCards').innerHTML = [
+    ['Total logins', sum.logins, 'sky'], ['Users seen', sum.users.length, ''], ['Readings added', sum.added, 'rain'], ['Failed admin logins', sum.failed, sum.failed ? 'danger' : '']
+  ].map(([l,v,c])=>`<div class="card"><div class="metric-label">${l}</div><div class="metric-value ${c}">${v}</div></div>`).join('');
+
+  const body = document.getElementById('actUsers');
+  body.innerHTML = sum.users.length ? sum.users.map(u=>{
+    const onFile = countReadingsBy(readings, u.user, u.role);
+    return `<tr>
+      <td>${escHtml(u.user)}</td>
+      <td><span class="act-badge ${u.role==='admin'?'admin':''}">${escHtml(u.role)}</span></td>
+      <td>${u.logins}</td><td>${u.added}</td><td>${onFile}</td>
+      <td>${escHtml(new Date(u.last).toLocaleString())}</td>
+      <td>${onFile ? `<button class="btn btn-danger btn-sm" data-user="${escHtml(u.user)}" data-role="${escHtml(u.role)}">Delete their readings</button>` : ''}</td>
+    </tr>`; }).join('') : `<tr><td colspan="7"><div class="empty-state">No activity recorded yet.</div></td></tr>`;
+
+  const sel = document.getElementById('actFilterUser');
+  sel.innerHTML = '<option value="">All users</option>' + sum.users.map(u=>`<option value="${escHtml(u.user)}">${escHtml(u.user)}</option>`).join('');
+  sel.value = sum.users.some(u=>u.user===actFilter.user) ? actFilter.user : ''; actFilter.user = sel.value;
+
+  const rows = filterActivity(activityLog, actFilter).slice().reverse().slice(0, 300);
+  document.getElementById('actCount').textContent = rows.length + ' shown · ' + activityLog.length + ' total';
+  document.getElementById('actBody').innerHTML = rows.length ? rows.map(e=>`<tr>
+      <td>${escHtml(new Date(e.ts).toLocaleString())}</td>
+      <td>${escHtml(e.user)}</td>
+      <td><span class="act-badge ${e.role==='admin'?'admin':''}">${escHtml(e.role)}</span></td>
+      <td>${escHtml(ACTIVITY_LABELS[e.action] || e.action)}</td>
+      <td>${escHtml(e.detail)}</td></tr>`).join('') : `<tr><td colspan="5"><div class="empty-state">No matching activity.</div></td></tr>`;
+}
+document.getElementById('actFilterAction').addEventListener('change', e=>{ actFilter.action = e.target.value; renderActivity(); });
+document.getElementById('actFilterUser').addEventListener('change', e=>{ actFilter.user = e.target.value; renderActivity(); });
+document.getElementById('actUsers').addEventListener('click', async e=>{
+  const btn = e.target.closest('button[data-user]');
+  if(!btn || authRole !== 'admin') return;
+  const user = btn.dataset.user, role = btn.dataset.role;
+  const n = countReadingsBy(readings, user, role);
+  if(!n || !confirm(`Delete ${n} reading(s) added by ${user}? This cannot be undone.`)) return;
+  readings = removeReadingsBy(readings, user, role);
+  await saveReadings();
+  logActivity('admin_delete_user_data', `Removed ${n} reading(s) added by ${user}`);
+  renderAll(); renderActivity();
+});
+document.getElementById('actClear').addEventListener('click', ()=>{
+  if(authRole !== 'admin' || !confirm('Clear the whole activity log? This cannot be undone.')) return;
+  const n = activityLog.length;
+  activityLog = [makeActivityEntry('Admin', 'admin', 'log_cleared', `Cleared ${n} entries`)];
+  saveActivity(); renderActivity();
+});
+document.getElementById('actExport').addEventListener('click', ()=>{
+  if(authRole !== 'admin') return;
+  const q = v => `"${String(v==null?'':v).replace(/"/g,'""')}"`;
+  const csv = ['Time,User,Role,Action,Details', ...activityLog.map(e=> [q(e.ts), q(e.user), q(e.role), q(e.action), q(e.detail)].join(','))].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = 'activity-log.csv'; a.click(); URL.revokeObjectURL(a.href);
+});
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab');
+  if(btn && btn.dataset.view === 'activity') renderActivity();
+});
+loadActivity();
+
+// ================= LOGIN / ROLES (front-end only) =================
+// NOTE: this is a client-side gate for showing/hiding features. Anyone who can read the page source can see the password,
+// so it is NOT real security. Real protection needs a server.
+const ADMIN_PASSWORD = 'admin123';
+function checkAdminPassword(pw){ return typeof pw === 'string' && pw.length > 0 && pw === ADMIN_PASSWORD; }
+const AUTH_KEY = 'weather-auth';
+let authRole = null;   // 'admin' | 'user' | null
+let authName = '';
+let loginRole = 'user';
+
+function readAuth(){
+  try{ const raw = sessionStorage.getItem(AUTH_KEY); if(raw){ const o = JSON.parse(raw); if(o && (o.role==='admin'||o.role==='user')) return o; } }catch(e){}
+  return null;
+}
+function writeAuth(o){ try{ if(o) sessionStorage.setItem(AUTH_KEY, JSON.stringify(o)); else sessionStorage.removeItem(AUTH_KEY); }catch(e){} }
+
+function buildLoginScene(){
+  const scene = document.getElementById('lgScene');
+  if(!scene || scene.childElementCount) return;
+  let h = '';
+  for(let i=0;i<46;i++){
+    h += `<span class="lg-star" style="left:${Math.random()*100}%; top:${Math.random()*70}%; animation-delay:${(Math.random()*3).toFixed(2)}s; animation-duration:${(2+Math.random()*3).toFixed(2)}s;"></span>`;
+  }
+  const clouds = [{top:12,w:1,dur:42,delay:0},{top:30,w:.7,dur:58,delay:-20},{top:58,w:1.2,dur:70,delay:-35},{top:78,w:.6,dur:50,delay:-10}];
+  clouds.forEach(c=>{ h += `<span class="lg-cloud" style="top:${c.top}%; transform-origin:left; scale:${c.w}; animation-duration:${c.dur}s; animation-delay:${c.delay}s;"></span>`; });
+  for(let i=0;i<34;i++){
+    h += `<span class="lg-drop" style="left:${Math.random()*100}%; animation-duration:${(0.9+Math.random()*0.9).toFixed(2)}s; animation-delay:${(-Math.random()*2).toFixed(2)}s; opacity:${(0.25+Math.random()*0.4).toFixed(2)};"></span>`;
+  }
+  scene.innerHTML = h;
+}
+
+function setLoginRole(role){
+  loginRole = role;
+  document.getElementById('lgRoles').dataset.role = role;
+  document.querySelectorAll('.lg-role').forEach(b=> b.classList.toggle('active', b.dataset.role===role));
+  document.getElementById('lgUserField').hidden = role!=='user';
+  document.getElementById('lgPassField').hidden = role!=='admin';
+  document.getElementById('lgSubmit').textContent = role==='admin' ? 'Login as Admin →' : 'Continue as User →';
+  document.getElementById('lgErr').textContent = '';
+  document.getElementById('lgHint').textContent = role==='admin'
+    ? 'Admin access unlocks Add Reading, Data Log, Analysis, Admin, Activity and Tests.'
+    : 'Users can view the dashboard, live weather, alerts and compare cities & divisions. Admins also get Add Reading, Data Log, Analysis, Admin, Activity and Tests.';
+  setTimeout(()=>{ const f = document.getElementById(role==='admin' ? 'lgPass' : 'lgName'); if(f) f.focus(); }, 60);
+}
+document.querySelectorAll('.lg-role').forEach(b=> b.addEventListener('click', ()=> setLoginRole(b.dataset.role)));
+
+function switchTab(name){ const t = document.querySelector(`.tab[data-view="${name}"]`); if(t) t.click(); }
+
+// what each role may see — pure, so it can be unit tested
+function roleCapabilities(role){
+  const admin = role === 'admin';
+  return { addReading: admin, dataLog: admin, analysis: admin, settings: admin, tests: admin, activity: admin, addedBy: admin, loggedIn: role === 'admin' || role === 'user' };
+}
+function currentUserName(){ return authRole === 'admin' ? 'Admin' : (authName || 'Guest'); }
+
+function applyRole(){
+  const caps = roleCapabilities(authRole);
+  const isAdmin = authRole === 'admin';
+  [['add',caps.addReading], ['log',caps.dataLog], ['analysis',caps.analysis], ['settings',caps.settings], ['tests',caps.tests], ['activity',caps.activity]].forEach(([name, allowed])=>{
+    const tab = document.querySelector(`.tab[data-view="${name}"]`);
+    const viewId = 'view-' + name;
+    if(!tab) return;
+    tab.style.display = allowed ? '' : 'none';
+    if(!allowed){
+      document.getElementById(viewId).classList.remove('active');
+      if(tab.classList.contains('active')) switchTab('dashboard');
+    }
+  });
+  document.body.classList.toggle('is-admin', caps.addedBy);
+  const chip = document.getElementById('roleChip');
+  const out = document.getElementById('logoutBtn');
+  if(authRole){
+    chip.style.display = 'inline-flex'; out.style.display = '';
+    chip.className = 'role-chip' + (isAdmin ? ' admin' : '');
+    chip.textContent = isAdmin ? '🛡️ Admin' : '👤 ' + (authName || 'User');
+  }else{
+    chip.style.display = 'none'; out.style.display = 'none';
+  }
+}
+
+function showLogin(){
+  const ov = document.getElementById('loginOverlay');
+  buildLoginScene();
+  ov.classList.remove('hidden','leaving');
+  document.getElementById('lgPass').value = '';
+  setLoginRole('user');
+}
+function hideLogin(animated){
+  const ov = document.getElementById('loginOverlay');
+  if(!animated){ ov.classList.add('hidden'); return; }
+  ov.classList.add('leaving');
+  setTimeout(()=> ov.classList.add('hidden'), 650);
+}
+
+document.getElementById('loginForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const err = document.getElementById('lgErr');
+  const card = document.getElementById('lgCard');
+  if(loginRole==='admin'){
+    const pw = document.getElementById('lgPass').value;
+    if(!checkAdminPassword(pw)){
+      logActivity('login_failed', 'Wrong admin password entered', { user:'(unknown)', role:'admin' });
+      err.textContent = 'Wrong admin password. Please try again.';
+      card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+      return;
+    }
+    authRole = 'admin'; authName = 'Admin';
+  }else{
+    authRole = 'user'; authName = document.getElementById('lgName').value.trim();
+  }
+  writeAuth({ role:authRole, name:authName });
+  logActivity('login', authRole==='admin' ? 'Admin signed in' : 'User signed in');
+  applyRole();
+  hideLogin(true);
+});
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  logActivity('logout', '');
+  authRole = null; authName = '';
+  writeAuth(null);
+  applyRole();
+  switchTab('dashboard');
+  showLogin();
+});
+
+(function initAuth(){
+  const a = readAuth();
+  if(a){ authRole = a.role; authName = a.name || ''; applyRole(); hideLogin(false); }
+  else { applyRole(); showLogin(); }
+})();
+
+// ================= COMPARE DIVISIONS (Bangladesh) =================
+const DIVISIONS = [
+  {name:'Dhaka',      lat:23.8103, lon:90.4125, color:'#3fa7d6'},
+  {name:'Chattogram', lat:22.3569, lon:91.7832, color:'#e8a33d'},
+  {name:'Rajshahi',   lat:24.3745, lon:88.6042, color:'#38b6a4'},
+  {name:'Khulna',     lat:22.8456, lon:89.5403, color:'#e0605a'},
+  {name:'Barishal',   lat:22.7010, lon:90.3535, color:'#e8c93d'},
+  {name:'Sylhet',     lat:24.8949, lon:91.8687, color:'#a78bfa'},
+  {name:'Rangpur',    lat:25.7439, lon:89.2752, color:'#f472b6'},
+  {name:'Mymensingh', lat:24.7471, lon:90.4203, color:'#94a3b8'},
+];
+function divisionExtremes(items){
+  if(!items.length) return { hottest:null, coolest:null, wettest:null };
+  const hottest = items.reduce((a,b)=> b.hi > a.hi ? b : a);
+  const coolest = items.reduce((a,b)=> b.hi < a.hi ? b : a);
+  const wettest = items.reduce((a,b)=> b.rain > a.rain ? b : a);
+  return { hottest:hottest.name, coolest:coolest.name, wettest:wettest.name };
+}
+let divSelected = new Set(DIVISIONS.map(d=>d.name));
+let lastDivResults = null;   // [{div, data}]
+let divLoading = false;
+
+function renderDivChips(){
+  const wrap = document.getElementById('divChips');
+  wrap.innerHTML = DIVISIONS.map(d=>
+    `<span class="div-chip ${divSelected.has(d.name)?'on':''}" style="--c:${d.color}" data-name="${d.name}"><span class="dot"></span>${d.name}</span>`).join('');
+  wrap.querySelectorAll('.div-chip').forEach(el=> el.addEventListener('click', ()=>{
+    const n = el.dataset.name;
+    divSelected.has(n) ? divSelected.delete(n) : divSelected.add(n);
+    renderDivChips();
+    renderDivisionResults(false);
+  }));
+}
+
+async function fetchDivisions(){
+  if(divLoading) return;
+  divLoading = true;
+  const box = document.getElementById('divBody');
+  const msg = document.getElementById('divMsg');
+  msg.className = 'msg'; msg.textContent = '';
+  box.innerHTML = `<div class="empty-state" style="padding:60px 0;">Fetching all 8 divisions…</div>`;
+  try{
+    const lats = DIVISIONS.map(d=>d.lat).join(','), lons = DIVISIONS.map(d=>d.lon).join(',');
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,weather_code,relative_humidity_2m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&forecast_days=7`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('bad response');
+    let data = await res.json();
+    if(!Array.isArray(data)) data = [data];
+    if(data.length !== DIVISIONS.length) throw new Error('unexpected response');
+    lastDivResults = DIVISIONS.map((d,i)=>({ div:d, data:data[i] }));
+    renderDivisionResults(true);
+  }catch(err){
+    lastDivResults = null;
+    box.innerHTML = `<div class="empty-state" style="padding:60px 0;">Could not load division weather — check your internet connection and press Refresh.</div>`;
+  }finally{ divLoading = false; }
+}
+
+function renderDivisionResults(animate){
+  const box = document.getElementById('divBody');
+  if(!lastDivResults) return;
+  const sel = lastDivResults.filter(r=> divSelected.has(r.div.name));
+  if(!sel.length){
+    box.innerHTML = `<div class="empty-state" style="padding:60px 0;">Select at least one division above.</div>`;
+    return;
+  }
+  const metric = document.getElementById('divMetric').value;
+  const anim = animate ? 'div-anim' : '';
+  const stagger = i => animate ? `style="animation-delay:${i*70}ms"` : '';
+  const today = r => ({ hi:r.data.daily.temperature_2m_max[0], lo:r.data.daily.temperature_2m_min[0], rain:(r.data.daily.precipitation_sum||[]).reduce((a,b)=>a+(b||0),0), rain0:(r.data.daily.precipitation_sum||[0])[0] });
+  const withT = sel.map(r=>({ r, t:today(r) }));
+  const ex = divisionExtremes(withT.map(x=>({ name:x.r.div.name, hi:x.t.hi, rain:x.t.rain })));
+  const byName = n => withT.find(x=> x.r.div.name === n);
+  const hottest = byName(ex.hottest), coolest = byName(ex.coolest), wettest = byName(ex.wettest);
+  const card = (label, item, valueHtml, sub, cls, i) => `
+    <div class="card ${anim}" ${stagger(i)}>
+      <div class="metric-label">${label}</div>
+      <div class="metric-value ${cls}" style="font-size:24px;">${item.r.div.name}</div>
+      <div class="metric-sub">${valueHtml} · ${sub}</div>
+    </div>`;
+  const titles = { max:`7-Day High Temperature (${tempUnitLabel()})`, min:`7-Day Low Temperature (${tempUnitLabel()})`, rain:'7-Day Rainfall (mm)' };
+
+  box.innerHTML = `
+    <div class="grid cols-3" style="margin-bottom:16px;">
+      ${card('🔥 Hottest today', hottest, fmtTemp(hottest.t.hi), 'today\'s high', 'danger', 0)}
+      ${card('❄️ Coolest today', coolest, fmtTemp(coolest.t.hi), 'today\'s high', 'sky', 1)}
+      ${card('🌧️ Wettest week', wettest, fmt(wettest.t.rain,1)+'mm', '7-day total', 'rain', 2)}
+    </div>
+    <div class="table-wrap ${anim}" style="margin-bottom:16px;" ${stagger(3)}>
+      <table>
+        <thead><tr><th>Division</th><th>Now</th><th>Condition</th><th>Today L / H</th><th>Today Rain</th><th>7-Day Rain</th></tr></thead>
+        <tbody>
+          ${withT.map(({r,t})=>{
+            const info = wmoInfo(r.data.current.weather_code);
+            return `<tr>
+              <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.div.color};margin-right:7px;"></span>${r.div.name}</td>
+              <td>${fmtTemp(r.data.current.temperature_2m)}</td>
+              <td>${info.icon} ${info.label}</td>
+              <td>${fmtTemp(t.lo)} / ${fmtTemp(t.hi)}</td>
+              <td>${fmt(t.rain0,1)}mm</td>
+              <td>${fmt(t.rain,1)}mm</td>
+            </tr>`; }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-card ${anim}" ${stagger(4)}>
+      <h4>${titles[metric]}</h4>
+      <canvas id="chartDivisions"></canvas>
+      <div style="display:flex; gap:14px; margin-top:10px; flex-wrap:wrap;">
+        ${sel.map(r=>`<span style="font-size:11px; color:var(--text-dim);"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.div.color};margin-right:5px;"></span>${r.div.name}</span>`).join('')}
+      </div>
+    </div>`;
+
+  const labels = sel[0].data.daily.time.map(d=>d.slice(5));
+  const series = sel.map(r=>({
+    color: r.div.color,
+    data: metric==='max' ? r.data.daily.temperature_2m_max.map(v=>cToDisplay(v))
+        : metric==='min' ? r.data.daily.temperature_2m_min.map(v=>cToDisplay(v))
+        : (r.data.daily.precipitation_sum||[]).map(v=>v||0),
+  }));
+  drawMultiLineChart('chartDivisions', labels, series);
+}
+document.getElementById('divMetric').addEventListener('change', ()=> renderDivisionResults(false));
+document.getElementById('divRefresh').addEventListener('click', fetchDivisions);
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab');
+  if(btn && btn.dataset.view==='divisions'){
+    if(!lastDivResults) fetchDivisions(); else renderDivisionResults(false); // redraw: canvas was hidden
+  }
+});
+renderDivChips();
+
+// ---------- unit tests: Test Case table + Output box (C++ style) ----------
+function runAllTests(){
+  if(authRole !== 'admin') return { passed:0, failed:0 }; // Tests are admin-only
+  const groups = [];
+  let passed = 0, failed = 0, intentional = 0;
+  const same = (a,b)=> (typeof a==='number' && typeof b==='number')
+    ? (isNaN(a) && isNaN(b)) || Math.abs(a-b) < 1e-9 : a===b;
+  const show = v => (v===null ? 'null' : (typeof v==='number' ? String(+v.toFixed(4)) : String(v)));
+  // case = [input description, actual value, expected value, isWrongOnPurpose?]
+  function group(title, cases){
+    const rows = cases.map(([input, actual, expected, wrong], i)=>{
+      const ok = same(actual, expected);
+      ok ? passed++ : failed++;
+      if(!ok && wrong) intentional++;
+      return { n:i+1, input, expected: show(expected) + (wrong ? ' (wrong expectation)' : ''), actual: show(actual), ok };
+    });
+    groups.push({ title, rows });
+  }
+
+  // --- Group 1: Statistics ---
+  group('Statistics (avg / median / stdDev / percentile)', [
+    ['avg([10,20,30])', avg([10,20,30]), 20],
+    ['avg([-5,5])', avg([-5,5]), 0],
+    ['median([3,1,2])', median([3,1,2]), 2],
+    ['median([1,2,3,4])', median([1,2,3,4]), 2.5],
+    ['stdDev([2,4,4,4,5,5,7,9])', stdDev([2,4,4,4,5,5,7,9]), 2],
+    ['stdDev([5])', stdDev([5]), 0],
+    ['percentile([1,2,3,4,5], 90)', percentile([1,2,3,4,5],90), 4.6],
+    ['median([1,2,3,4])', median([1,2,3,4]), 2, true],
+  ]);
+
+  // --- Group 2: Temperature conversion ---
+  const savedUnit = tempUnit;
+  tempUnit = 'F';
+  const c2f = c => cToDisplay(c);
+  const f0 = c2f(0), f100 = c2f(100), fm40 = c2f(-40), back = displayToC(212), f37 = c2f(37);
+  tempUnit = savedUnit;
+  group('Temperature conversion (°C ↔ °F)', [
+    ['0°C → °F', f0, 32],
+    ['100°C → °F', f100, 212],
+    ['-40°C → °F', fm40, -40],
+    ['212°F → °C', back, 100],
+    ['37°C → °F', f37, 100, true],
+  ]);
+
+  // --- Group 3: Trend label ---
+  group('Trend label', [
+    ['[20,20,20,30,30,30]', trendLabel([20,20,20,30,30,30]), 'Rising ↑'],
+    ['[30,30,30,20,20,20]', trendLabel([30,30,30,20,20,20]), 'Falling ↓'],
+    ['[20,20.1,20,20.1]', trendLabel([20,20.1,20,20.1]), 'Stable'],
+    ['[1,2]', trendLabel([1,2]), 'Not enough data'],
+    ['[1,2,3,4,5,6]', trendLabel([1,2,3,4,5,6]), 'Falling ↓', true],
+  ]);
+
+  // --- Group 4: Linear regression ---
+  const rows4 = [{date:'2026-01-01',temp:10},{date:'2026-01-02',temp:12},{date:'2026-01-03',temp:14}];
+  const reg = linearRegression(rows4, 'temp');
+  group('Linear regression (temps 10, 12, 14)', [
+    ['slope', reg.slope, 2],
+    ['intercept', reg.intercept, 10],
+    ['lastX', reg.lastX, 2],
+    ['only 2 rows', linearRegression(rows4.slice(0,2),'temp'), null],
+    ['slope', reg.slope, 3, true],
+  ]);
+
+  // --- Group 5: Wind direction ---
+  group('Wind direction', [
+    ['0°', windDir(0), 'N'],
+    ['45°', windDir(45), 'NE'],
+    ['90°', windDir(90), 'E'],
+    ['180°', windDir(180), 'S'],
+    ['270°', windDir(270), 'W'],
+    ['90°', windDir(90), 'N', true],
+  ]);
+
+  // --- Group 6: Alert engine (temporarily swaps app state, then restores it) ---
+  const saved = { readings, thresholds: {...thresholds}, selectedStation };
+  readings = [
+    {date:'2026-02-01', station:'T', temp:40, rain:0,  hum:50, wind:0},
+    {date:'2026-02-02', station:'T', temp:30, rain:50, hum:50, wind:0},
+    {date:'2026-02-03', station:'T', temp:30, rain:0,  hum:50, wind:60},
+    {date:'2026-02-04', station:'T', temp:43, rain:0,  hum:50, wind:0},
+    {date:'2026-02-05', station:'T', temp:25, rain:5,  hum:50, wind:10},
+    {date:'2026-02-06', station:'T', temp:37, rain:0,  hum:50, wind:0},
+  ];
+  thresholds = { heat:38, rain:40, wind:50, autoHeat:false, autoRain:false, autoWind:false };
+  selectedStation = '';
+  const alerts = computeAlerts();
+  const byType = t => alerts.filter(a=>a.type===t).length;
+  const sev = alerts.find(a=>a.date==='2026-02-04');
+  const hasAlert = d => alerts.some(a=>a.date===d);
+  const r = { heat:byType('Heat Wave'), rain:byType('Heavy Rainfall'), wind:byType('High Wind'),
+              sev: sev ? sev.severity : 'none', normal: hasAlert('2026-02-05') ? 'Alert' : 'No alert',
+              below: hasAlert('2026-02-06') ? 'Alert' : 'No alert' };
+  readings = saved.readings; thresholds = saved.thresholds; selectedStation = saved.selectedStation;
+  group('Extreme weather alerts (limits: heat 38°C, rain 40mm, wind 50km/h)', [
+    ['Heat Wave alerts (40°C, 43°C)', r.heat, 2],
+    ['Heavy Rainfall alerts (50mm)', r.rain, 1],
+    ['High Wind alerts (60km/h)', r.wind, 1],
+    ['Severity of 43°C reading', r.sev, 'severe'],
+    ['Normal day (25°C, 5mm, 10km/h)', r.normal, 'No alert'],
+    ['37°C reading (limit 38°C)', r.below, 'Alert', true],
+  ]);
+
+  // ======== Group 7: Login & roles ========
+  const caps = r => roleCapabilities(r);
+  group('Login & roles (Admin / User)', [
+    ['Admin password "admin123"', checkAdminPassword('admin123'), true],
+    ['Wrong password "wrong"', checkAdminPassword('wrong'), false],
+    ['Empty password', checkAdminPassword(''), false],
+    ['Admin sees Add Reading, Data Log, Analysis, Admin', ['addReading','dataLog','analysis','settings'].every(k=>caps('admin')[k]), true],
+    ['Admin sees Tests and Activity tabs', caps('admin').tests && caps('admin').activity, true],
+    ['Admin sees "Added by" column', caps('admin').addedBy, true],
+    ['User sees Add Reading tab', caps('user').addReading, false],
+    ['User sees Data Log tab', caps('user').dataLog, false],
+    ['User sees Analysis tab', caps('user').analysis, false],
+    ['User sees Admin tab', caps('user').settings, false],
+    ['User sees Tests tab', caps('user').tests, false],
+    ['User sees Activity tab', caps('user').activity, false],
+    ['User counts as logged in', caps('user').loggedIn, true],
+    ['Logged-out visitor sees any admin feature', Object.keys(caps(null)).some(k=> caps(null)[k]), false],
+    ['User sees Add Reading tab', caps('user').addReading, true, true],
+  ]);
+
+  // ======== Group 8: Activity log (who logged in / who added data) ========
+  const T = n => `2026-11-0${n}T10:00:00.000Z`;
+  const sample = [
+    makeActivityEntry('Rahim','user','login','',T(1)),
+    makeActivityEntry('Rahim','user','add_reading','Dhaka · 2026-11-01',T(2)),
+    makeActivityEntry('Rahim','user','add_reading','Dhaka · 2026-11-02',T(3)),
+    makeActivityEntry('Rahim','user','add_reading','Dhaka · 2026-11-03',T(4)),
+    makeActivityEntry('Rahim','user','login','',T(5)),
+    makeActivityEntry('Karim','user','login','',T(6)),
+    makeActivityEntry('(unknown)','admin','login_failed','Wrong admin password entered',T(7)),
+  ];
+  const sm = summarizeActivity(sample);
+  const rahim = sm.users.find(u=>u.user==='Rahim');
+  const capped = appendActivity(sample.slice(0,3), makeActivityEntry('New','user','login',''), 3);
+  group('Activity log (who logged in, who added data)', [
+    ['Entry records user, role & action', (()=>{ const e = makeActivityEntry('Rahim','user','login',''); return e.user+'/'+e.role+'/'+e.action; })(), 'Rahim/user/login'],
+    ['Total logins in sample', sm.logins, 3],
+    ['Readings added in sample', sm.added, 3],
+    ['Failed admin logins counted', sm.failed, 1],
+    ['Users seen (failed attempt is not a user)', sm.users.length, 2],
+    ['Rahim: logins', rahim.logins, 2],
+    ['Rahim: readings added', rahim.added, 3],
+    ['Most recently active user first', sm.users[0].user, 'Karim'],
+    ['Filter action = add_reading', filterActivity(sample, {action:'add_reading', user:''}).length, 3],
+    ['Filter user = Karim', filterActivity(sample, {action:'', user:'Karim'}).length, 1],
+    ['Log is capped (max 3, newest kept)', capped.length + '/' + capped[capped.length-1].user, '3/New'],
+    ['Users seen', sm.users.length, 3, true],
+  ]);
+
+  // ======== Group 9: Reading ownership (admin control) ========
+  const owned = [
+    {id:1, addedBy:'Rahim', addedRole:'user'}, {id:2, addedBy:'Rahim', addedRole:'user'},
+    {id:3, addedBy:'Karim', addedRole:'user'}, {id:4, addedBy:'Admin', addedRole:'admin'}, {id:5},
+  ];
+  group('Reading ownership (admin can remove a user\'s data)', [
+    ['Readings added by Rahim', countReadingsBy(owned,'Rahim','user'), 2],
+    ['Readings added by Admin', countReadingsBy(owned,'Admin','admin'), 1],
+    ['Old reading with no owner is not counted', countReadingsBy(owned,'undefined'), 0],
+    ['Same name, different role is separate', countReadingsBy(owned,'Rahim','admin'), 0],
+    ['Remove Rahim\'s readings -> left', removeReadingsBy(owned,'Rahim','user').length, 3],
+    ['Original list is not changed', owned.length, 5],
+    ['Remove Karim\'s readings -> left', removeReadingsBy(owned,'Karim','user').length, 3, true],
+  ]);
+
+  // ======== Group 10: Compare Cities ========
+  const five = [1,2,3,4,5].map(i=>({label:'City'+i}));
+  group('Compare Cities (limits)', [
+    ['Add first city', canAddCompareCity([], 'Dhaka').ok, true],
+    ['Add 5th city (4 already)', canAddCompareCity(five.slice(0,4), 'New').ok, true],
+    ['Add 6th city (5 already) is blocked', canAddCompareCity(five, 'New').ok, false],
+    ['Block reason when full', canAddCompareCity(five, 'New').reason, 'max'],
+    ['Duplicate city is blocked', canAddCompareCity(five.slice(0,2), 'City1').ok, false],
+    ['Block reason for duplicate', canAddCompareCity(five.slice(0,2), 'City1').reason, 'duplicate'],
+    ['Add 6th city (5 already)', canAddCompareCity(five, 'New').ok, true, true],
+  ]);
+
+  // ======== Group 11: Compare Divisions ========
+  const names = DIVISIONS.map(d=>d.name);
+  const ex = divisionExtremes([
+    {name:'Dhaka', hi:34, rain:5}, {name:'Sylhet', hi:30, rain:40}, {name:'Rajshahi', hi:38, rain:0},
+  ]);
+  group('Compare Divisions (Bangladesh)', [
+    ['Number of divisions', DIVISIONS.length, 8],
+    ['Division names are unique', new Set(names).size, 8],
+    ['Chart colours are unique', new Set(DIVISIONS.map(d=>d.color)).size, 8],
+    ['All coordinates are inside Bangladesh', DIVISIONS.every(d=> d.lat>=20.5 && d.lat<=26.7 && d.lon>=88 && d.lon<=92.7), true],
+    ['Includes Sylhet', names.includes('Sylhet'), true],
+    ['Hottest division', ex.hottest, 'Rajshahi'],
+    ['Coolest division', ex.coolest, 'Sylhet'],
+    ['Wettest division', ex.wettest, 'Sylhet'],
+    ['Empty selection is safe', divisionExtremes([]).hottest, null],
+    ['Hottest division', ex.hottest, 'Dhaka', true],
+  ]);
+
+  // ======== Group 12: °C / °F display formatting ========
+  const unitBefore = tempUnit;
+  let fmtC, fmtF, deltaF, dash;
+  try{
+    tempUnit = 'C'; fmtC = fmtTemp(25);
+    tempUnit = 'F'; fmtF = fmtTemp(25); deltaF = fmtTempDelta(10);
+    dash = fmtTemp(NaN);
+  } finally { tempUnit = unitBefore; }
+  group('Temperature display (°C / °F toggle)', [
+    ['25 in °C mode', fmtC, '25.0°C'],
+    ['25 in °F mode', fmtF, '77.0°F'],
+    ['10° spread in °F mode (no +32)', deltaF, '18.0°F'],
+    ['Missing value shows dash', dash, '—'],
+    ['fmt() rounds to 1 decimal', fmt(3.14159), '3.1'],
+    ['fmt(NaN) shows dash', fmt(NaN), '—'],
+    ['25°C in °F mode', fmtF, '25.0°F', true],
+  ]);
+
+  // ======== Group 13: Weather helpers (Live Weather / City Management look) ========
+  group('Weather helpers (conditions & animated backgrounds)', [
+    ['Code 0 label', wmoInfo(0).label, 'Clear sky'],
+    ['Code 65 label', wmoInfo(65).label, 'Heavy rain'],
+    ['Unknown code label', wmoInfo(999).label, '—'],
+    ['Code 95 category', weatherCategory(95), 'storm'],
+    ['Code 71 category', weatherCategory(71), 'snow'],
+    ['Clear day background', buildWxBg(0,true).cls, 'wxbg-day-clear'],
+    ['Clear night background (stars)', buildWxBg(0,false).cls, 'wxbg-night-clear'],
+    ['Rain background', buildWxBg(61,true).cls, 'wxbg-rain'],
+    ['Fog background', buildWxBg(45,true).cls, 'wxbg-fog'],
+    ['UV 7 label', uvInfo(7).label, 'High'],
+    ['Overcast (code 3) category', weatherCategory(3), 'rain', true],
+  ]);
+
+  // ======== Group 14: Saved cities (City Management) ========
+  const savedBackup = savedCities.map(c=>({...c}));
+  savedCities = [];
+  upsertSavedCity(1, 2, 'A');
+  upsertSavedCity(3, 4, 'B', true);
+  upsertSavedCity(9, 9, 'A');
+  const cityCount = savedCities.length, firstCity = savedCities[0].label, aLat = savedCities.find(c=>c.label==='A').lat;
+  savedCities = savedBackup; saveSavedCities();
+  group('Saved cities (City Management)', [
+    ['Same city added twice is not duplicated', cityCount, 2],
+    ['Current-location city sorts first', firstCity, 'B'],
+    ['Re-adding a city updates its coordinates', aLat, 9],
+    ['Your real saved cities are untouched', savedCities.length, savedBackup.length],
+    ['Number of saved cities', cityCount, 3, true],
+  ]);
+
+  // ======== Group 15: Station lists & auto threshold ========
+  group('Station lists & auto thresholds', [
+    ['Bangladesh districts', BD_DISTRICTS.length, 64],
+    ['Districts list includes Dhaka', BD_DISTRICTS.includes('Dhaka'), true],
+    ['Countries list includes Bangladesh', WORLD_COUNTRIES.includes('Bangladesh'), true],
+    ['No duplicate districts', new Set(BD_DISTRICTS).size, BD_DISTRICTS.length],
+    ['No duplicate countries', new Set(WORLD_COUNTRIES).size, WORLD_COUNTRIES.length],
+    ['Auto threshold needs 5 readings', autoThresholdFor([1,2,3,4]), null],
+    ['Auto threshold, no variation', autoThresholdFor([10,10,10,10,10]), 10],
+    ['Dropdown option markup', buildOptions(['A']), '<option value="A">A</option>'],
+    ['Bangladesh districts', BD_DISTRICTS.length, 8, true],
+  ]);
+
+  // ======== Group 16: Alert colours & labels ========
+  group('Alert colours & labels', [
+    ['Heat Wave class', typeClass('Heat Wave'), 'type-heat'],
+    ['Heavy Rainfall class', typeClass('Heavy Rainfall'), 'type-rain'],
+    ['High Wind class', typeClass('High Wind'), 'type-wind'],
+    ['Heat Wave marker', typeEmoji('Heat Wave'), '🔴'],
+    ['Heavy Rainfall marker is yellow', typeEmoji('Heavy Rainfall'), '🟡'],
+    ['High Wind marker', typeEmoji('High Wind'), '🔵'],
+    ['Unknown alert type class', typeClass('Other'), ''],
+    ['Heavy Rainfall marker', typeEmoji('Heavy Rainfall'), '🩷', true],
+  ]);
+
+  // --- render: Test Case table + Output box per group ---
+  const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  document.getElementById('testOutput').innerHTML = groups.map(g=>`
+    <div style="margin-bottom:26px;">
+      <h4 style="margin:0 0 10px; font-size:15px;">${esc(g.title)}</h4>
+      <div style="font-weight:700; margin-bottom:6px;">Test Case</div>
+      <div class="table-wrap" style="margin-bottom:12px;"><table>
+        <thead><tr><th>Test</th><th>Input</th><th>Expected Result</th><th>Actual Result</th><th>Status</th></tr></thead>
+        <tbody>${g.rows.map(x=>`<tr>
+          <td>${x.n}</td><td>${esc(x.input)}</td><td>${esc(x.expected)}</td><td>${esc(x.actual)}</td>
+          <td style="color:${x.ok?'var(--rain)':'var(--danger)'}; font-weight:700;">${x.ok?'Passed':'Failed'}</td></tr>`).join('')}
+        </tbody></table></div>
+      <div style="font-weight:700; margin-bottom:6px;">Output</div>
+      <div style="border:1px solid var(--border, #2a3b57); border-radius:6px; padding:10px 14px; line-height:1.9;">
+        ${g.rows.map(x=>`<div style="color:${x.ok?'var(--rain)':'var(--danger)'};">Test ${x.n} ${x.ok?'Passed':'Failed'}: ${esc(x.input)} = ${esc(x.ok ? x.expected : 'got '+x.actual+', expected '+x.expected)}</div>`).join('')}
+      </div>
+    </div>`).join('');
+  const sum = document.getElementById('testSummary');
+  const real = failed - intentional;
+  sum.textContent = `${passed} passed · ${failed} failed (${intentional} intentional${real ? ', ' + real + ' REAL' : ''})`;
+  sum.style.color = real ? 'var(--danger)' : '';
+  groups.forEach(g=>{ console.log('Test Group: '+g.title); g.rows.forEach(x=> console.log(`Test ${x.n} ${x.ok?'Passed':'Failed'}: ${x.input} = ${x.expected}`)); });
+  return { passed, failed, intentional, real };
+}
+document.getElementById('runTestsBtn').addEventListener('click', runAllTests);
+
 (async function init(){
   setStatus('Loading station log…');
   loadTempUnit();
